@@ -1,25 +1,42 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
+import Datasheet from 'react-datasheet';
+import 'react-datasheet/lib/react-datasheet.css';
+
 class App extends Component {
+
+  state = {
+    grid: [
+      [
+        { readOnly: true, value: '' },
+        { value: 'A', readOnly: true },
+        { value: 'B', readOnly: true },
+        { value: 'C', readOnly: true },
+        { value: 'D', readOnly: true }
+      ],
+      [{ readOnly: true, value: 1 }, { value: 1 }, { value: 3 }, { value: 3 }, { value: 3 }],
+      [{ readOnly: true, value: 2 }, { value: 2 }, { value: 4 }, { value: 4 }, { value: 4 }],
+      [{ readOnly: true, value: 3 }, { value: 1 }, { value: 3 }, { value: 3 }, { value: 3 }],
+      [{ readOnly: true, value: 4 }, { value: 2 }, { value: 4 }, { value: 4 }, { value: 4 }]
+    ]
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div style={{ width: 500 }}>
+        <Datasheet
+          data={this.state.grid}
+          valueRenderer={(cell) => cell.value}
+          onContextMenu={(e, cell, i, j) => cell.readOnly ? e.preventDefault() : null}
+          onCellsChanged={changes => {
+            const grid = this.state.grid.map(row => [...row])
+            changes.forEach(({ cell, row, col, value }) => {
+              grid[row][col] = { ...grid[row][col], value }
+            })
+            this.setState({ grid })
+          }}
+        />
       </div>
     );
   }
